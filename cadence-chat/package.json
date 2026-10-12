@@ -1,0 +1,21 @@
+{
+  "name": "cadence-chat",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A streaming AI chat assistant with MongoDB history and server-controlled response tones.",
+  "engines": {
+    "node": ">=22.9.0"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server/index.js",
+    "dev": "node --watch --env-file-if-exists=.env server/index.js",
+    "test": "node --test tests/*.test.js",
+    "test:mongo": "node --env-file-if-exists=.env --test tests/mongo.integration.js",
+    "check": "node scripts/check.js"
+  },
+  "dependencies": {
+    "express": "5.3.0",
+    "mongodb": "7.7.0"
+  }
+}

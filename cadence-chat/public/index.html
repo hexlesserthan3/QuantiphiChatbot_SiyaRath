@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f5f0" />
+    <meta
+      name="description"
+      content="Cadence — a thoughtful AI chat workspace with live replies, saved conversations, and a tone that fits."
+    />
+    <title>Cadence · A little clarity</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module" src="/js/app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#prompt">Skip to message</a>
+    <svg
+      class="svg-library"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="m16 16 4.5 4.5" />
+      </symbol>
+      <symbol id="i-chat" viewBox="0 0 24 24">
+        <path d="M20 11.5a8 8 0 0 1-8 8H4l1.5-4A8 8 0 1 1 20 11.5Z" />
+        <path d="M8 10h8M8 14h5" />
+      </symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-download" viewBox="0 0 24 24">
+        <path d="M12 3v12m-5-5 5 5 5-5M4 16v4h16v-4" />
+      </symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24">
+        <path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="8" y="8" width="12" height="13" rx="2" />
+        <path d="M16 8V3H3v13h5" />
+      </symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24">
+        <path d="M4 6h16M4 12h16M4 18h16" />
+      </symbol>
+      <symbol id="i-close" viewBox="0 0 24 24">
+        <path d="m6 6 12 12M6 18 18 6" />
+      </symbol>
+      <symbol id="i-spark" viewBox="0 0 24 24">
+        <path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5Z" />
+      </symbol>
+      <symbol id="i-code" viewBox="0 0 24 24">
+        <path d="m8 6-6 6 6 6m8-12 6 6-6 6m-3-14-2 16" />
+      </symbol>
+      <symbol id="i-pen" viewBox="0 0 24 24">
+        <path d="m15 4 5 5M4 20l5-1L21 7l-5-5L4 14Z" />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24">
+        <path d="m5 12 4 4L19 6" />
+      </symbol>
+    </svg>
+    <div class="app-shell">
+      <button
+        id="backdrop"
+        class="backdrop"
+        aria-label="Close conversation sidebar"
+        hidden
+      ></button>
+      <aside id="sidebar" class="sidebar" aria-label="Conversation history">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">✳</span
+          ><span>cadence<span class="brand-dot">.</span></span
+          ><button
+            id="close-sidebar"
+            class="icon-button mobile-only"
+            aria-label="Close sidebar"
+          >
+            <svg><use href="#i-close" /></svg>
+          </button>
+        </div>
+        <button id="new-chat" class="new-chat">
+          <svg><use href="#i-plus" /></svg>New conversation<span
+            class="key-hint"
+            >N</span
+          >
+        </button>
+        <label class="search-box"
+          ><svg><use href="#i-search" /></svg
+          ><input
+            id="search"
+            type="search"
+            maxlength="100"
+            placeholder="Search conversations"
+            aria-label="Search conversation titles and messages"
+        /></label>
+        <div class="sidebar-section">
+          <span>YOUR CONVERSATIONS</span><span id="chat-count">0</span>
+        </div>
+        <nav
+          id="conversation-list"
+          class="conversation-list"
+          aria-label="Past conversations"
+        ></nav>
+        <div class="sidebar-bottom">
+          <div class="small-note">
+            <span class="note-star">✳</span>
+            <div>
+              <strong>A space to think out loud.</strong>
+              <p>Your next good idea starts here.</p>
+            </div>
+          </div>
+          <div class="workspace">
+            <div class="workspace-avatar">Y</div>
+            <div>
+              <strong>Your workspace</strong><span>Personal conversations</span>
+            </div>
+            <span class="online-dot" aria-label="Workspace active"></span>
+          </div>
+        </div>
+      </aside>
+      <main class="main-panel">
+        <header class="topbar">
+          <div class="topbar-left">
+            <button
+              id="open-sidebar"
+              class="icon-button mobile-only"
+              aria-label="Open conversation sidebar"
+              aria-expanded="false"
+            >
+              <svg><use href="#i-menu" /></svg>
+            </button>
+            <div>
+              <span class="eyebrow">YOUR AI WORKSPACE</span>
+              <h1 id="conversation-title">A fresh conversation</h1>
+            </div>
+          </div>
+          <div class="topbar-actions">
+            <span id="mode-badge" class="mode-badge"
+              ><span></span>Connecting</span
+            ><button
+              id="export-chat"
+              class="icon-button"
+              title="Export conversation as Markdown"
+              aria-label="Export conversation as Markdown"
+              disabled
+            >
+              <svg><use href="#i-download" /></svg></button
+            ><button
+              id="delete-chat"
+              class="icon-button danger"
+              title="Delete conversation"
+              aria-label="Delete conversation"
+              disabled
+            >
+              <svg><use href="#i-trash" /></svg>
+            </button>
+          </div>
+        </header>
+        <section class="tone-bar" aria-label="Response tone">
+          <div class="tone-label">
+            <svg><use href="#i-spark" /></svg><span>Set the tone</span>
+          </div>
+          <div
+            class="tone-options"
+            role="group"
+            aria-label="Choose response tone"
+          >
+            <button
+              data-tone="professional"
+              class="tone-button active"
+              aria-pressed="true"
+            >
+              Professional</button
+            ><button
+              data-tone="casual"
+              class="tone-button"
+              aria-pressed="false"
+            >
+              Casual</button
+            ><button
+              data-tone="concise"
+              class="tone-button"
+              aria-pressed="false"
+            >
+              Concise
+            </button>
+          </div>
+          <span id="tone-description" class="tone-description"
+            >Polished & thoughtful</span
+          >
+        </section>
+        <div id="scroll-area" class="scroll-area">
+          <section id="welcome" class="welcome">
+            <div class="welcome-symbol" aria-hidden="true">
+              <span>✳</span><i></i><b></b>
+            </div>
+            <p class="eyebrow welcome-kicker">
+              BIG IDEAS START WITH A SMALL HELLO
+            </p>
+            <h2>A little clarity,<br />a conversation <em>away.</em></h2>
+            <p class="welcome-description">
+              Untangle a thought, make something new, or find your next step.<br
+                class="desktop-break"
+              />
+              I’m here to help you move things forward.
+            </p>
+            <div class="suggestions">
+              <button
+                class="suggestion"
+                data-prompt="Explain how streaming AI chat works, using a simple analogy."
+              >
+                <span class="suggestion-icon peach"
+                  ><svg><use href="#i-spark" /></svg></span
+                ><strong>Make it make sense</strong
+                ><span>Break down a complex idea</span
+                ><span class="suggestion-arrow">↗</span>
+              </button>
+              <button
+                class="suggestion"
+                data-prompt="Help me write a professional introduction for a software engineering interview."
+              >
+                <span class="suggestion-icon sage"
+                  ><svg><use href="#i-pen" /></svg></span
+                ><strong>Find the right words</strong
+                ><span>Turn a blank page into a start</span
+                ><span class="suggestion-arrow">↗</span>
+              </button>
+              <button
+                class="suggestion"
+                data-prompt="Help me plan a simple JavaScript project. Suggest milestones and explain the first step."
+              >
+                <span class="suggestion-icon lavender"
+                  ><svg><use href="#i-code" /></svg></span
+                ><strong>Build something good</strong
+                ><span>Work through your next project</span
+                ><span class="suggestion-arrow">↗</span>
+              </button>
+            </div>
+            <div class="welcome-footnote">
+              <span class="tiny-line"></span>A thoughtful answer, in your kind
+              of voice<span class="tiny-line"></span>
+            </div>
+          </section>
+          <section
+            id="messages"
+            class="messages"
+            aria-label="Conversation messages"
+            hidden
+          ></section>
+        </div>
+        <div class="composer-area">
+          <div id="error-banner" class="error-banner" role="alert" hidden>
+            <span id="error-text"></span
+            ><button
+              id="dismiss-error"
+              class="icon-button"
+              aria-label="Dismiss error"
+            >
+              <svg><use href="#i-close" /></svg>
+            </button>
+          </div>
+          <div
+            id="stream-status"
+            class="stream-status"
+            role="status"
+            aria-live="polite"
+          ></div>
+          <form id="composer" class="composer">
+            <label for="prompt" class="sr-only">Your message</label
+            ><textarea
+              id="prompt"
+              name="prompt"
+              rows="2"
+              placeholder="What’s on your mind?"
+              maxlength="8000"
+              required
+            ></textarea>
+            <div class="composer-bottom">
+              <span class="composer-hint"
+                ><span class="mini-star">✳</span
+                ><span id="composer-tone">Professional tone</span
+                ><span class="composer-divider">·</span
+                ><span id="character-count">0 / 8,000</span></span
+              >
+              <div class="send-controls">
+                <span class="enter-hint">Enter to send</span
+                ><button
+                  id="stop-button"
+                  class="stop-button"
+                  type="button"
+                  hidden
+                >
+                  <span>■</span> Stop</button
+                ><button
+                  id="send-button"
+                  class="send-button"
+                  type="submit"
+                  aria-label="Send message"
+                  disabled
+                >
+                  <svg><use href="#i-arrow" /></svg>
+                </button>
+              </div>
+            </div>
+          </form>
+          <p id="footer-note" class="footer-note">
+            AI can make mistakes. Give important details a second look.
+          </p>
+        </div>
+      </main>
+    </div>
+    <div id="toast" class="toast" role="status" hidden></div>
+    <dialog id="delete-dialog">
+      <form method="dialog">
+        <span class="dialog-icon"
+          ><svg><use href="#i-trash" /></svg
+        ></span>
+        <h2>Delete this conversation?</h2>
+        <p>
+          This removes the messages from your history. This action cannot be
+          undone.
+        </p>
+        <div class="dialog-actions">
+          <button value="cancel" class="secondary-button">
+            Keep conversation</button
+          ><button value="delete" class="delete-confirm">Delete</button>
+        </div>
+      </form>
+    </dialog>
+  </body>
+</html>
